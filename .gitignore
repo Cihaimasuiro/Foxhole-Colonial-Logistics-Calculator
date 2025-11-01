@@ -1,0 +1,5 @@
+# Ignore local configuration files
+/src/config.php
+
+# Ignore vendor dependencies
+/vendor/
