@@ -1,91 +1,96 @@
-## 🛠️ Foxhole Colonial Logistics Calculator
+# PHP Game Database Template
 
-### **A Web-Based Tool for Efficient Resource Planning**
+This is a simple, secure, and adaptable PHP & MySQL template for creating a game database. It provides a full CRUD (Create, Read, Update, Delete) interface for managing game items, built on a clean, modern, and easy-to-understand file structure.
 
-This project is a web application designed to help Colonial logistics players in the game **Foxhole** quickly calculate the total resource cost (Salvage, Components, etc.) and production time required to manufacture specific items and shipments.
+This project is designed to be the perfect starting point for any game-related database, whether for Foxhole, EVE Online, or your own custom project.
 
------
+## Features
+* **Full CRUD:** Create, Read, Update, and Delete items out of the box.
+* **Secure:** Uses **Prepared Statements** to prevent all SQL Injection.
+* **Modern Structure:** Uses a `public/` directory (Front Controller pattern) for excellent security and clean URLs.
+* **Adaptable:** Built to be easily modified. You can copy/paste the "item" logic to create new categories like "vehicles," "players," or "factions."
+* **Clean UI:** Uses Bootstrap 5 for a clean, responsive interface.
 
-## ✨ Features & Goals
+## Project Origin & Philosophy
 
-This project is currently in the **early development phase**.
+This project started its life as a simple **college assignment** for a retail CRUD application (you can see this old version in the `v0.1-legacy` branch).
 
-### 🎯 Core Goal
+Inspired by the complex logistics of games like **Foxhole** (which is why the repository has its current name!), it has been completely refactored from the ground up.
 
-To provide an instant breakdown of raw resource costs for any given quantity of a Colonial item.
+The goal is to provide a **solid, professional foundation** that anyone can grab, adapt, and build upon for their own game-related database project. It's built to be installed locally, act as a template, and be adaptable for any future web server deployment.
 
-### 🚧 Current Status & Future Features
+## Local Installation Guide
 
-| Status | Feature | Description |
-| :--- | :--- | :--- |
-| **In Progress** | **Core HTML/CSS Structure** | Establishing the layout and styling for the calculator interface. |
-| **To Do** | **Calculation Logic** | Implementing the JavaScript/PHP logic to perform accurate resource cost calculations. |
-| **To Do** | **Item Database** | Creating an accurate, up-to-date JSON or data structure of all Colonial item costs. |
-| **To Do** | **Live Production Time** | Adding a feature to estimate the total production time based on factory/assembly methods. |
-
------
-
-## 💻 Technologies Used
-
-This project is a great learning opportunity for full-stack web development.
-
-  * **Frontend:** **HTML5** and **CSS3** (currently the main focus).
-  * **Logic:** **JavaScript** (for front-end user interaction and validation).
-  * **Backend/Data:** **PHP** and **Hack** (as seen in current files, planned for handling complex data and calculations or potentially serving as a small API).
-
------
-
-## 🚀 Getting Started
-
-We encourage you to set up a **live demo** for your calculator as soon as possible. Once you do, be sure to update this section\!
-
-### Live Demo
-
-[Link to your live calculator (e.g., GitHub Pages link) here\!]
-
-### Local Setup for Development
-
-If you want to contribute, follow these steps to get the project running on your local machine:
+Follow these steps to run the project on your local machine (using Laragon, XAMPP, etc.).
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/Cihaimasuiro/Foxhole-Colonial-Logistics-Log.git
+    git clone [https://github.com/Cihaimasuiro/Foxhole-Colonial-Logistics-Calculator.git](https://github.com/Cihaimasuiro/Foxhole-Colonial-Logistics-Calculator.git)
+    cd Foxhole-Colonial-Logistics-Calculator
     ```
-2.  **Navigate to the Directory:**
-    ```bash
-    cd Foxhole-Colonial-Logistics-Log
-    ```
-3.  **Run Locally:**
-      * For the current files (`Tugas6`): Since the project uses PHP, you will need a local web server environment (like XAMPP or MAMP) to run the PHP files correctly.
-      * Alternatively, for simple HTML/CSS/JS testing, you can open the main `.html` file directly in your browser.
 
------
+2.  **Import the Database:**
+    * Open your database tool (like HeidiSQL or phpMyAdmin).
+    * Create a new database named `game_db`.
+    * Import the `game_database.sql` file into your new `game_db` database. This will create the `items` table and add some sample data.
 
-## 🤝 How to Contribute
+3.  **Configure the Connection:**
+    * **This file is ignored by Git.** You must create it manually.
+    * Copy `src/config.php.example` (if one exists) or just create a new file named `src/config.php`.
+    * Paste the following into `src/config.php` and add your credentials:
+        ```php
+        <?php
+        $host = "127.0.0.1";
+        $user = "root";
+        $pass = ""; // Your MySQL password (usually empty on Laragon/XAMPP)
+        $db   = "game_db";
+        $port = 3306;
+        
+        $mysqli = new mysqli($host, $user, $pass, $db, $port);
+        
+        if ($mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: " . $mysqli->connect_error;
+            exit();
+        }
+        ?>
+        ```
 
-This project is actively looking for collaborators to help build it\! Any help with design, data, or coding is appreciated.
+4.  **Set Your Webserver Root (CRITICAL STEP):**
+    * This project uses a secure `public/` directory. Your webserver must point to it.
+    * **In Laragon:** Right-click Laragon icon > Menu > www > Select your project folder > Change Document Root > Select the **`public`** folder.
+    * **In XAMPP:** You must edit your `httpd-vhosts.conf` file to create a Virtual Host where the `DocumentRoot` points to `C:/xampp/htdocs/YourProjectName/public`.
+    * Restart your server.
 
-### Find an Issue
+5.  **Run:**
+    * Visit your project's local URL (e.g., `http://game-db-template.test`). You should see the item list.
 
-Check the **[Issues tab](https://www.google.com/search?q=https://github.com/Cihaimasuiro/Foxhole-Colonial-Logistics-Log/issues)** for tasks. Look for issues labeled **`good first issue`** for easy starting points\!
+## How to Adapt This Template (e.g., Add "Vehicles")
 
-### Contribution Process
+This template is designed to be easily extended.
+
+1.  **Database:** In `game_database.sql`, add a new `CREATE TABLE vehicles (...)` with the columns you want.
+2.  **Copy Views:**
+    * `views/item_list.php` -> `views/vehicle_list.php`
+    * `views/item_add_form.php` -> `views/vehicle_add_form.php`
+    * ...etc.
+3.  **Copy Actions:**
+    * `src/item_add_action.php` -> `src/vehicle_add_action.php`
+    * ...etc.
+4.  **Edit Files:** Go through your new `vehicle_...` files and change all references from `items` to `vehicles`.
+5.  **Update Router:** In `public/index.php`, add new `case` statements for `vehicle_list`, `add_vehicle`, etc.
+6.  **Update Nav:** In `public/index.php`, add a new "Vehicles" link to the header navigation.
+
+## How to Contribute
+
+Contributions are welcome! This is a perfect project for developers looking to practice their PHP skills on a structured, modern application.
 
 1.  **Fork** the repository.
-2.  **Clone** your forked repository.
-3.  Create a new branch: `git checkout -b feature/your-feature-name`
-4.  Make your changes and commit them.
-5.  Push your branch and submit a **Pull Request (PR)** to the `main` branch of this repository.
+2.  Create a new branch: `git checkout -b feature/YourAmazingFeature`
+3.  Commit your changes: `git commit -m 'Add: YourAmazingFeature'`
+4.  Push to the branch: `git push origin feature/YourAmazingFeature`
+5.  Open a **Pull Request**.
 
-### Data Contribution Needed\!
-
-If you are a logistics veteran, we urgently need accurate in-game data for:
-
-  * Base resource cost (materials, components, fuel) for all Colonial weapons and vehicles.
-  * Production times for different structures (Factory, Refinery, Assembly Station).
-
------
-
-## 👤 Project Creator
-
-  * [@Cihaimasuiro](https://www.google.com/search?q=https://github.com/Cihaimasuiro)
+### Good First Tasks for Contributors
+* Add a new CRUD category (like "Vehicles" or "Factions").
+* Implement a simple search bar for the `item_list.php` page.
+* Improve the UI/CSS styling.
